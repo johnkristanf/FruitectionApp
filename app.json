@@ -1,0 +1,57 @@
+{
+  "expo": {
+    "name": "Fruitection",
+    "slug": "ClamscannerApp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/clam_app_logo.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/clam_app_logo.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.johnkristanf.ClamscannerApp",
+      "permissions": [
+        "INTERNET",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
+
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDlgGqUgdx7y6XqEybrvh0O21KtsRbV2HU"
+        }
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "3786d311-c48a-40fe-841f-13fbe19db1dd"
+      }
+    }
+  }
+}
