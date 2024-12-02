@@ -12,8 +12,8 @@ export type REPORT_DETAILS = {
     latitude: number
     city: string
     province: string
-    district: string
-    mollusk_type: string
+    street: string
+    durian_disease_type: string
     user_id: number
 }
 
@@ -24,9 +24,9 @@ export type ReportedCasesTypes = {
     latitude: number,
     city: string,
     province: string,
-    district: string,
+    street: string,
     reportedAt: string
-    mollusk_type: string
+    durian_disease_type: string
     
     user_id: number
     status: string

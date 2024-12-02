@@ -38,7 +38,7 @@ export default function LoginPage() {
 
     return (
         <ImageBackground
-          source={require('../assets/images/login_bg.png')}
+          source={require('../assets/images/city_bg.jpeg')}
           style={styles.login_form_container}
         >
 
@@ -47,10 +47,10 @@ export default function LoginPage() {
             <View style={styles.flex_row}>
 
               <Link href="/" >
-                <FontAwesome name='chevron-left' size={20} color="black"/>
+                <FontAwesome name='chevron-left' size={20} style={{color: '#ffff', fontWeight: 'bold'}}/>
               </Link>
 
-              <Text style={styles.text}>Login</Text>
+              <Text style={styles.text}>Sign In your account</Text>
             </View> 
 
             <LoginForm 
@@ -97,8 +97,10 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    fontSize: 40,
-    fontWeight: '300',
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#ffff',
+
   },
 
   form: {

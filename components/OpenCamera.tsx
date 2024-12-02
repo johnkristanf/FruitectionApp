@@ -5,7 +5,7 @@ import { View, Pressable, StyleSheet, Text, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { MolluskScannedDetails } from '@/types/reports';
 import { resizeImage } from '@/helpers/resize';
-import { FetchMolluskDetails, Scan } from '@/api/post/scan';
+import { FetchDurianDetails, Scan } from '@/api/post/scan';
 import Colors from '@/constants/Colors';
 
 export function OpenCamera({ setImageForScanning, setIsOpenCamera, setScannedData, setCancelOrReported }: {
@@ -43,11 +43,10 @@ export function OpenCamera({ setImageForScanning, setIsOpenCamera, setScannedDat
                         } as any);
 
                         const scanRespData = await Scan(formData, setCancelOrReported);
-                        console.log("scanRespData: ", scanRespData)
 
                         if (scanRespData) {
-                            FetchMolluskDetails(scanRespData.mollusk_classified_result)
-                                .then(molluskDetails => setScannedData(molluskDetails))
+                            FetchDurianDetails(scanRespData.durian_disease_result)
+                                .then(durianDetails => setScannedData(durianDetails))
                                 .catch(err => console.error(err));
 
                         } else {
@@ -112,7 +111,7 @@ export function OpenCamera({ setImageForScanning, setIsOpenCamera, setScannedDat
                 <Pressable
                     style={({ pressed }) => [
                         styles.button_scan,
-                        { backgroundColor: pressed ? 'gray' : Colors.theme.backgroundcolor },
+                        { backgroundColor: pressed ? 'gray' : '#16A34A' },
                     ]}
                     onPress={startScanning}
                 >
@@ -235,12 +234,12 @@ const styles = StyleSheet.create({
     },
     button_scan: {
         backgroundColor: Colors.theme.backgroundcolor,
-        color: Colors.theme.whiteText,
+        color: '#16A34A',
         width: '100%',
         height: '100%',
         padding: 20,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     text: {
         color: Colors.theme.whiteText,
@@ -253,6 +252,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         width: '100%',
+        color: '#16A34A'
     },
     header: {
         flexDirection: 'row',

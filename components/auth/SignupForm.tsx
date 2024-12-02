@@ -64,6 +64,7 @@ export default function SignupForm({setIsSignup, setIsLoading}: {
                             <TextInput
                                 style={styles.input}
                                 placeholder="Enter Full Name"
+                                placeholderTextColor="#fff" 
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
@@ -82,6 +83,7 @@ export default function SignupForm({setIsSignup, setIsLoading}: {
                             <TextInput
                                 style={styles.input}
                                 placeholder="Enter Address"
+                                placeholderTextColor="#fff" 
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
@@ -100,6 +102,7 @@ export default function SignupForm({setIsSignup, setIsLoading}: {
                             <TextInput
                                 style={styles.input}
                                 placeholder="Enter Email"
+                                placeholderTextColor="#fff" 
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
@@ -114,11 +117,12 @@ export default function SignupForm({setIsSignup, setIsLoading}: {
                 <View style={styles.inputContainer}>
                     <Controller
                         control={control}
-                        rules={{ required: true, minLength: 8 }}
+                        rules={{ required: true }}
                         render={({ field: { onChange, onBlur, value } }) => (
                             <TextInput
                                 style={styles.input}
                                 placeholder="Enter Password"
+                                placeholderTextColor="#fff" 
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
@@ -152,20 +156,24 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         justifyContent: 'center',
         padding: 20,
+
     },
     inputs: {
         width: '75%',
     },
+
     inputContainer: {
         width: '100%',
     },
     
     input: {
-        borderBottomColor: '#00e2e6',
+        borderBottomColor: '#16A34A',
         borderBottomWidth: 1,
         backgroundColor: 'transparent',
         padding: 6,
-        marginBottom: 10
+        marginBottom: 10,
+        color: '#ffff'
+
     },
 
     signup_btn_container: {
@@ -176,7 +184,7 @@ const styles = StyleSheet.create({
     },
 
     signup_btn: {
-        backgroundColor: Colors.theme.backgroundcolor,
+        backgroundColor: '#16A34A',
         borderRadius: Colors.theme.radius,
         color: Colors.theme.whiteText,
         padding: 9,

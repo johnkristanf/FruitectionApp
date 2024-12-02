@@ -1,18 +1,15 @@
 import { MolluskScannedDetails } from "@/types/reports";
 
-import { View, Text, Image, Pressable, StyleSheet, Alert, PanResponder, PanResponderInstance, Animated } from "react-native";
+import { View, Text, Image, Pressable, StyleSheet, Alert, Animated } from "react-native";
 import { getData } from "@/helpers/store";
 
 import { getAddressFromLocation, getLocation } from "@/helpers/location";
 import Colors from "@/constants/Colors";
 import { REPORT } from "@/api/post/report";
 
-import { FetchMolluskCommonSightings } from "@/api/get/mollusk";
-import { useEffect, useMemo, useRef, useState, lazy, Suspense } from "react";
+import { useState, lazy } from "react";
 
 import { MolluskSightingsType } from "@/types/mollusk";
-
-const MolluskSightingsMap = lazy(() => import('../SightingsMap'));
 
 
 export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrReported }: { 
@@ -22,26 +19,10 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
 }){
 
   const statusTextColor = scannedData && (
-    scannedData.status.toLocaleLowerCase() === "endangered" ? "red" 
-    : scannedData.status.toLocaleLowerCase() != "least concern" ? "orange" 
-    : "green")
+    scannedData.status.toLocaleLowerCase() === "critical" ? "red" 
+    : scannedData.status.toLocaleLowerCase() === "healthy" ? "green" 
+    : "orange")
     
-  const [molluskSightings, setMolluskSightings] = useState<MolluskSightingsType[]>();
-  const [openSightingsMap, setOpenSightingsMap] = useState<boolean>(false);
-
-
-  const commonSightingsMemo = useMemo(() => {
-    if(scannedData) {
-      return FetchMolluskCommonSightings(scannedData.scientific_name);
-    }
-    return Promise.resolve([]);
-  }, [scannedData]);
-
-  useEffect(() => {
-    commonSightingsMemo.then(result => setMolluskSightings(result)).catch(err => console.error(err));
-  }, [commonSightingsMemo]);
-
- 
 
   
   const report = async () => {
@@ -50,7 +31,7 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
 
         const stored_uID = await getData('user_id');
     
-        if (stored_uID && scannedData?.mollusk_name && scannedData.mollusk_name !== "Invalid Image") {
+        if (stored_uID && scannedData?.mollusk_name && scannedData.mollusk_name !== "Unknown") {
 
           const user_id = parseInt(stored_uID, 10);
     
@@ -69,8 +50,8 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
             latitude,
             city: address.city,
             province: address.province,
-            district: address.district,
-            mollusk_type: scannedData?.mollusk_name,
+            street: address.street,
+            durian_disease_type: scannedData?.mollusk_name,
             user_id,
           };
     
@@ -98,74 +79,38 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
 
     }
     
-    const translateX = useRef(new Animated.Value(0)).current;
-
-    const panResponder: PanResponderInstance = useRef(
-      PanResponder.create({
-        onMoveShouldSetPanResponder: (evt, gestureState) => {
-          return Math.abs(gestureState.dx) > 20;
-        },
-        onPanResponderMove: (evt, gestureState) => {
-          translateX.setValue(gestureState.dx);
-        },
-        onPanResponderRelease: (evt, gestureState) => {
-          if (gestureState.dx < -150) {
-            Animated.timing(translateX, {
-              toValue: -50,
-              duration: 300,
-              useNativeDriver: true,
-            }).start(() => {
-              setOpenSightingsMap(true);
-            });
-          } else {
-            Animated.spring(translateX, {
-              toValue: 0,
-              useNativeDriver: true,
-            }).start();
-          }
-        },
-      })
-    ).current;
-
-    const resetPosition = () => {
-      Animated.spring(translateX, {
-        toValue: 0,
-        useNativeDriver: true,
-      }).start();
-    };
-
-
+    
     return (
 
-      molluskSightings && scannedData && openSightingsMap ? (
-        <Suspense fallback={
-          <View style={styles.loading_map_message_container}>
-            <Text style={styles.loading_text}>Loading Sigthings Map...</Text>
-          </View>
-          }
+      // molluskSightings && scannedData && openSightingsMap ? (
+      //   <Suspense fallback={
+      //     <View style={styles.loading_map_message_container}>
+      //       <Text style={styles.loading_text}>Loading Sigthings Map...</Text>
+      //     </View>
+      //     }
           
-          >
+      //     >
 
-          <MolluskSightingsMap 
-            molluskName={scannedData.mollusk_name} 
-            molluskSightings={molluskSightings} 
-            setOpenSightingsMap={(open) => {
-              setOpenSightingsMap(open);
-              if (!open) resetPosition();
-            }} 
-          />
+      //     <MolluskSightingsMap 
+      //       molluskName={scannedData.mollusk_name} 
+      //       molluskSightings={molluskSightings} 
+      //       setOpenSightingsMap={(open) => {
+      //         setOpenSightingsMap(open);
+      //         if (!open) resetPosition();
+      //       }} 
+      //     />
 
-        </Suspense> ) 
+      //   </Suspense> ) 
         
-        : (
+        // : (
 
         scannedData ? (
 
-          <Animated.View style={[styles.scan_container, { transform: [{ translateX }] }]} >
+          <Animated.View style={styles.scan_container} >
   
               <View style={styles.mollusk_details_container}>
   
-                {scannedData.mollusk_name !== "Invalid Image" && (
+                {scannedData.mollusk_name !== "Unknown" && (
                   <Text style={styles.scanned_mollusk_textTitle}>Scanned Mollusk Details</Text>
                 )}
   
@@ -173,12 +118,12 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
                 <Image source={{ uri: imageForScanning }} style={styles.image_styles} />
   
                 
-                  {scannedData.mollusk_name === "Invalid Image" ? (
+                  {scannedData.mollusk_name === "Unknown" ? (
   
                     <View style={[styles.mollusk_name_status_container, {height: '20%'}]}>
                       <View style={styles.invalid_container}>
   
-                        <Text style={[styles.text, {fontSize: 40, color: 'red', marginBottom: 10}]}>Invalid Image</Text>
+                        <Text style={[styles.text, {fontSize: 40, color: 'red', marginBottom: 10}]}>Unknown Image</Text>
   
                         <Pressable
                           onPress={() => setCancelOrReported(true)}
@@ -198,26 +143,14 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
                       <Text style={[styles.text, {fontSize: 18, color: statusTextColor, marginBottom: 8, marginLeft: 4}]}>
                         {scannedData.status === "N/A" ? "" : scannedData.status}
                       </Text>
+
+                      <Text style={[styles.description_text]}>
+                        {scannedData.description}
+                      </Text>
   
                     </View>
                   )}
-        
-                {scannedData.mollusk_name !== "Invalid Image" && (
-  
-                  <View style={{paddingHorizontal: 10, gap: 10, width: '95%'}} {...panResponder.panHandlers}>
-
-                    <Text style={styles.description_text}>Description: </Text>
-                    <Text style={[styles.text, {textAlign: 'justify', fontSize: 14}]}>{scannedData.description} </Text>
-
-                    <View style={styles.swipeMessageContainer} >
-                      <Text style={styles.swipeMessageText}>Swipe left to view common sightings map</Text>
-                      <Image source={require('../../assets/images/swipe_left.png')} style={styles.swipe_left_icon} />
-                    </View>
-
-                  </View>
-  
-                )}
-      
+ 
               </View>
   
   
@@ -235,7 +168,7 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
                   </View>
   
                 ) : (
-                  scannedData.mollusk_name !== "Invalid Image" && (
+                  scannedData.mollusk_name !== "Unknown" && (
   
                     <View style={styles.scanned_buttons_container}>
                       <Pressable
@@ -262,7 +195,7 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
           </Animated.View>
           
         ) : null
-      ) 
+      // ) 
       
     );
 }
@@ -271,7 +204,7 @@ const styles = StyleSheet.create({
   scan_container: {
     width: "100%",
     height: "100%",
-    backgroundColor: Colors.theme.backgroundcolor,
+    backgroundColor: '#16A34A',
     flexDirection: "column",
     position: "relative",
   },
@@ -326,6 +259,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
     color: "gray",
+    paddingHorizontal: 6,
+    textAlign: 'justify'
   },
 
   text: {

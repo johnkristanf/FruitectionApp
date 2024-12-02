@@ -1,11 +1,12 @@
 import axios from "axios";
+import { DOMAIN_NAME_GO, DOMAIN_NAME_PY } from "../domain";
 
 export const Scan = async (capturedImageFormData: FormData, setCancelOrReported: React.Dispatch<React.SetStateAction<boolean>>) => {
 
     console.log("setCancelOrReported:", setCancelOrReported)
 
     try {
-        const response = await axios.post("https://clamscanner.com/py/image/scan", capturedImageFormData, {
+        const response = await axios.post(`${DOMAIN_NAME_PY}/image/scan`, capturedImageFormData, {
             headers: { 
                 'Content-Type': 'multipart/form-data',
             },
@@ -24,10 +25,11 @@ export const Scan = async (capturedImageFormData: FormData, setCancelOrReported:
 }
 
 
-export const FetchMolluskDetails = async (mollusk_name:string) => {
+export const FetchDurianDetails = async (durian_name:string) => {
+    
     try {
 
-        const response = await axios.get(`https://clamscanner.com/go/fetch/mollusk/${mollusk_name}`, {
+        const response = await axios.get(`${DOMAIN_NAME_GO}/fetch/durian/${durian_name}`, {
             headers: { 
                 'Content-Type': 'application/json'
             }

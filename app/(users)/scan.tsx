@@ -37,7 +37,7 @@ export default function ScanPage() {
 
     return (
         <ImageBackground
-            source={require('../../assets/images/scan_bg.png')}
+            source={require('../../assets/images/city_bg.jpeg')}
             style={styles.scan_container}
         >
 
@@ -115,7 +115,8 @@ const styles = StyleSheet.create({
 
     text: {
         fontWeight: 'bold',
-        fontSize: 16
+        fontSize: 16,
+        color: '#ffff'
     },
 
     flex_row_center: {

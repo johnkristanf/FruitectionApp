@@ -49,11 +49,11 @@ export default function LoginForm({setLoginnedUser, setIsLoading}: {
                 <View style={styles.inputContainer}>
                     <Controller
                         control={control}
-                        rules={{ required: true }}
                         render={({ field: { onChange, onBlur, value } }) => (
                             <TextInput
                                 style={styles.input}
                                 placeholder="Enter Email"
+                                placeholderTextColor="#fff" 
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
@@ -68,11 +68,11 @@ export default function LoginForm({setLoginnedUser, setIsLoading}: {
                 <View style={styles.inputContainer}>
                     <Controller
                         control={control}
-                        rules={{ required: true, minLength: 8 }}
                         render={({ field: { onChange, onBlur, value } }) => (
                             <TextInput
                                 style={styles.input}
                                 placeholder="Enter Password"
+                                placeholderTextColor="#fff" 
                                 onBlur={onBlur}
                                 onChangeText={onChange}
                                 value={value}
@@ -90,7 +90,7 @@ export default function LoginForm({setLoginnedUser, setIsLoading}: {
                         ]}
                         onPress={handleSubmit(onSubmit)}
                     >
-                        <Text style={styles.text}>LOGIN</Text>
+                        <Text style={styles.text}>SIGN IN</Text>
                 </Pressable>
 
             </View>
@@ -114,15 +114,16 @@ const styles = StyleSheet.create({
     },
     
     input: {
-        borderBottomColor: '#00e2e6',
+        borderBottomColor: '#16A34A',
         borderBottomWidth: 1,
         backgroundColor: 'transparent',
         padding: 6,
-        marginBottom: 15
+        marginBottom: 15,
+        color: '#ffff'
     },
 
     login_btn: {
-        backgroundColor: Colors.theme.backgroundcolor,
+        backgroundColor: '#16A34A',
         borderRadius: Colors.theme.radius,
         color: Colors.theme.whiteText,
         padding: 9,

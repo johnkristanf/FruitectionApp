@@ -40,17 +40,17 @@ export default function SignupPage() {
 
     return (
         <ImageBackground
-            source={require('../assets/images/signup_bg.jpg')}
+            source={require('../assets/images/city_bg.jpeg')}
             style={styles.signup_form_container}
         >
             <View style={styles.form}>
 
                 <View style={styles.flex_row}>
                     <Link href="/">
-                        <FontAwesome name='chevron-left' size={20} color="black" />
+                        <FontAwesome name='chevron-left' size={20} style={{color: '#fff', fontWeight: 'bold'}}/>
                     </Link>
 
-                    <Text style={styles.text}>Registration</Text>
+                    <Text style={styles.text}>Sign Up to get started</Text>
 
                 </View>
 
@@ -91,8 +91,10 @@ const styles = StyleSheet.create({
         marginRight: 20,
     },
     text: {
-        fontSize: 40,
-        fontWeight: '300',
+        fontSize: 30,
+        fontWeight: 'bold',
+        color: '#fff'
+
     },
     form: {
         width: '100%',

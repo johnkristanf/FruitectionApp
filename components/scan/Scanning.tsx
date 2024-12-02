@@ -12,7 +12,15 @@ export function Scanning({ imageForScanning }: { imageForScanning: string }) {
           <ScanAnimation  />
         </View>
 
-        <Text style={{fontWeight: 'bold', fontSize: 30, marginTop: 30, marginBottom: 40 }}>Scanning Image....</Text>
+        <Text style={{
+          fontWeight: 'bold', 
+          fontSize: 30, 
+          marginTop: 30, 
+          marginBottom: 40,
+          color: '#ffff' 
+        }}>
+          Scanning Image....
+        </Text>
   
       </View>
     );

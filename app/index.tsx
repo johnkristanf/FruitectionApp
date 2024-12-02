@@ -4,35 +4,31 @@ import { Link } from 'expo-router';
 export default function LandingPage() {
     return (
         <ImageBackground
-            source={require('../assets/images/clamApp_bg.png')}
+            source={require('../assets/images/city_bg.jpeg')}
             style={styles.index_container}
         >
             <View style={styles.flex_col_center}>
                 <Image
-                    source={require('../assets/images/clam_logo.png')}
+                    source={require('../assets/images/city_logo.png')}
                     style={styles.image_size}
                     resizeMode="contain" 
                 />
-                <Text style={styles.text}>ClamScanner</Text>
+                <Text style={styles.text}>Fruitection</Text>
             </View>
 
-            <View style={[styles.flex_col_center, { width: '100%', gap: 8 }]}> 
+            <View style={[styles.flex_col_center, { width: '100%', gap: 12 }]}> 
 
-                <View style={styles.get_started_container}>
-                    <Link href="/signup" style={styles.get_started}>Get Started</Link>
+                <View style={styles.signup_container}>
+                    <Link href="/signup" style={styles.get_started}>Sign Up</Link>
                 </View>
 
                 <Text style={styles.already_signup}>
                     Already Have an Account?
-                    <Link href="/login" style={{fontWeight: 'bold', textDecorationLine: 'underline'}}>Login</Link>
+                    <Link href="/login" style={{textDecorationLine: 'underline'}}>Sign In</Link>
                 </Text>
+
                 
             </View>
-
-            
-
-
-
 
         </ImageBackground>
     );
@@ -63,8 +59,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 
-    get_started_container: {
-        backgroundColor: '#00e2e6',
+
+    signup_container: {
+        backgroundColor: '#16A34A',
         borderRadius: 8,
         padding: 8,
         width: '70%',
@@ -82,5 +79,6 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 18,
         textAlign: 'center',
+        fontWeight: 'bold', 
     }
 });

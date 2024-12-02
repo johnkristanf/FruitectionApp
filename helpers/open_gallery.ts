@@ -3,7 +3,7 @@ import { launchImageLibraryAsync, MediaTypeOptions } from "expo-image-picker";
 import { resizeImage } from "./resize";
 import { getInfoAsync } from "expo-file-system";
 
-import { FetchMolluskDetails, Scan } from "@/api/post/scan";
+import { FetchDurianDetails, Scan } from "@/api/post/scan";
 import { MolluskScannedDetails } from "@/types/reports";
 import { Alert } from "react-native";
 
@@ -44,12 +44,12 @@ export const openGallery = async (
 
             } as any);
 
-            const respData = await Scan(formData, setCancelOrReported) 
+            const scanRespData = await Scan(formData, setCancelOrReported) 
 
-            if(respData){
-                FetchMolluskDetails(respData.mollusk_classified_result).
-                then(molluskDetails => setScannedData(molluskDetails)).
-                catch(err => console.error(err))
+            if(scanRespData){
+                FetchDurianDetails(scanRespData.durian_disease_result)
+                    .then(durianDetails => setScannedData(durianDetails))
+                    .catch(err => console.error(err));
 
             } else {
                 const errorMsg = "Request timeout due to slow internet connection, you will be redirected back and try to scan again.";
