@@ -4,13 +4,14 @@ import { resizeImage } from "./resize";
 import { getInfoAsync } from "expo-file-system";
 
 import { FetchDurianDetails, Scan } from "@/api/post/scan";
-import { MolluskScannedDetails } from "@/types/reports";
+import { DurianScannedDetails } from "@/types/reports";
 import { Alert } from "react-native";
 
 export const openGallery = async (
     setImageForScanning: React.Dispatch<React.SetStateAction<string | undefined>>,
-    setScannedData: React.Dispatch<React.SetStateAction<MolluskScannedDetails | undefined>>,
-    setCancelOrReported: React.Dispatch<React.SetStateAction<boolean>>
+    setScannedData: React.Dispatch<React.SetStateAction<DurianScannedDetails | undefined>>,
+    setCancelOrReported: React.Dispatch<React.SetStateAction<boolean>>,
+    setScanType: React.Dispatch<React.SetStateAction<string>>
 ) => {
 
     const result = await launchImageLibraryAsync({
@@ -24,6 +25,7 @@ export const openGallery = async (
     const { canceled, assets } = result;
 
     if (!canceled && assets[0].uri) {
+        setScanType("upload")
         setImageForScanning(assets[0].uri)
 
         const imgURI = assets[0].uri
@@ -48,7 +50,12 @@ export const openGallery = async (
 
             if(scanRespData){
                 FetchDurianDetails(scanRespData.durian_disease_result)
-                    .then(durianDetails => setScannedData(durianDetails))
+                    .then(durianDetails =>{
+                        if (durianDetails) {
+                            durianDetails.scan_percentage = scanRespData.predicted_disease_percentage;
+                            setScannedData(durianDetails);
+                        }
+                    })
                     .catch(err => console.error(err));
 
             } else {

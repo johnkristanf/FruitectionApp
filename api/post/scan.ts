@@ -1,5 +1,6 @@
 import axios from "axios";
 import { DOMAIN_NAME_GO, DOMAIN_NAME_PY } from "../domain";
+import { DurianScannedDetails } from "@/types/reports";
 
 export const Scan = async (capturedImageFormData: FormData, setCancelOrReported: React.Dispatch<React.SetStateAction<boolean>>) => {
 
@@ -25,7 +26,7 @@ export const Scan = async (capturedImageFormData: FormData, setCancelOrReported:
 }
 
 
-export const FetchDurianDetails = async (durian_name:string) => {
+export const FetchDurianDetails = async (durian_name:string): Promise<DurianScannedDetails | null> => {
     
     try {
 
@@ -37,8 +38,11 @@ export const FetchDurianDetails = async (durian_name:string) => {
 
 
         if(response.status === 200) return response.data
+
+        return null
         
     } catch (error) {
         console.error(error)
+        return null
     }
 }

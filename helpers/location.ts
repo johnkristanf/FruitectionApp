@@ -4,7 +4,21 @@ interface Address {
     city: string;
     province: string;
     street: string;
+    farmName: string;
 }
+
+
+// WALA PAY CAGANGOHAN FARM
+const farmLocations = {
+    cagangohanFarm: { latitude: 7.2950, longitude: 125.6700 }, 
+    jpLaurelFarm: { latitude: 7.276094, longitude: 125.677476 }, 
+};
+
+
+// const farmLocations = {
+//     cagangohanFarm: { latitude: 7.2950, longitude: 125.6700 }, 
+//     jpLaurelFarm: { latitude: 7.2847055, longitude: 125.6770541 }, 
+// }
   
 export const getLocation = async (): Promise<{ latitude: number; longitude: number } | null> => {
 
@@ -17,6 +31,10 @@ export const getLocation = async (): Promise<{ latitude: number; longitude: numb
   
     let location = await getCurrentPositionAsync({});
     const { latitude, longitude } = location.coords;
+
+    console.log("latitude: ", latitude);
+    console.log("longitude: ", longitude);
+    
   
     return { latitude, longitude };
 };
@@ -24,7 +42,7 @@ export const getLocation = async (): Promise<{ latitude: number; longitude: numb
 
 export const getAddressFromLocation = async (latitude: number, longitude: number): Promise<Address> => {
     
-    let address: Address = { city: '', province: '', street: '' };
+    let address: Address = { city: '', province: '', street: '', farmName: '' };
     
     try {
 
@@ -37,11 +55,16 @@ export const getAddressFromLocation = async (latitude: number, longitude: number
             console.log("location result: ", result);
             
             const { city, region, street } = result[0];
+            const farmName = await getFarmIndicator(latitude, longitude)
+
+            console.log("farmName: ", farmName);
+            
 
             address = {
                 city: city || '',
                 province: region || '',
                 street: street || '',
+                farmName
             };
 
         }
@@ -55,7 +78,44 @@ export const getAddressFromLocation = async (latitude: number, longitude: number
 };
 
 
+const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371; // Earth radius in kilometers
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in kilometers
+    return distance;
+};
+
+
+const getFarmIndicator = async (latitude: number, longitude: number) => {
+    const distanceToCagangohan = haversineDistance(latitude, longitude, farmLocations.cagangohanFarm.latitude, farmLocations.cagangohanFarm.longitude);
+    const distanceToJPLaurel = haversineDistance(latitude, longitude, farmLocations.jpLaurelFarm.latitude, farmLocations.jpLaurelFarm.longitude);
+
+    const threshold = 0.5; // Threshold in kilometers
+
+    let farmName = '';
+    if (distanceToCagangohan < threshold) {
+        farmName = 'Cagangohan Farm';
+    } else if (distanceToJPLaurel < threshold) {
+        farmName = 'J.P.Laurel Farm';
+    } else {
+        farmName = 'Unknown Farm';
+    }
+
+    return farmName;
+};
+
+
+
+
 // export const getAddressFromGoogle = async (latitude: number, longitude: number): Promise<Address> => {
+//     console.log('google ni part');
+    
 //     const API_KEY = 'AIzaSyDlgGqUgdx7y6XqEybrvh0O21KtsRbV2HU';
 //     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`;
 
@@ -65,6 +125,9 @@ export const getAddressFromLocation = async (latitude: number, longitude: number
 
 //         if (data.results.length > 0) {
 //             const addressComponents = data.results[0].address_components;
+
+//             console.log("data.results[0]:", data.results[0]);
+            
 
 //             console.log("addressComponents: ", addressComponents);
 
@@ -93,7 +156,7 @@ export const getAddressFromLocation = async (latitude: number, longitude: number
 //             return {
 //                 city,
 //                 province,
-//                 district
+//                 street: district
 //             };
 //         }
 
@@ -101,7 +164,7 @@ export const getAddressFromLocation = async (latitude: number, longitude: number
 //         console.log(error);
 //     }
 
-//     return { city: '', province: '', district: '' };
+//     return { city: '', province: '', street: '' };
 // };
 
 

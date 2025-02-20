@@ -1,7 +1,7 @@
 import { OpenCamera } from "@/components/OpenCamera";
 import { ScannedImageResult } from "@/components/scan/ScannedResult";
 import { Scanning } from "@/components/scan/Scanning";
-import { MolluskScannedDetails } from "@/types/reports";
+import { DurianScannedDetails } from "@/types/reports";
 import { useCameraPermissions } from "expo-camera";
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ImageBackground, Image, Pressable } from "react-native";
@@ -11,17 +11,27 @@ import { router } from "expo-router";
 
 export default function ScanPage() {
 
-    const [scannedData, setScannedData] = useState<MolluskScannedDetails | undefined>();
+    const [scannedData, setScannedData] = useState<DurianScannedDetails | undefined >();
     const [isOpenCamera, setIsOpenCamera] = useState<boolean>(false);
     const [imageForScanning, setImageForScanning] = useState<string>();
+
+    const [scanType, setScanType] = useState<string>("");
 
     const [cancelOrReported, setCancelOrReported] = useState<boolean>(false);
 
     const [_, requestPermission] = useCameraPermissions();
 
    
-    const openCamera = () => {
+    const openDiseasedCameraScan = () => {
         requestPermission();
+        setScanType("diseased");
+        setIsOpenCamera(true);
+    };
+
+
+    const openHealthyCameraScan = () => {
+        requestPermission();
+        setScanType("healthy");
         setIsOpenCamera(true);
     };
 
@@ -60,6 +70,7 @@ export default function ScanPage() {
                     setIsOpenCamera={setIsOpenCamera}
                     setScannedData={setScannedData}
                     setCancelOrReported={setCancelOrReported}
+                    scanType={scanType}
                 />
 
             ) : imageForScanning && !scannedData ? (
@@ -70,6 +81,7 @@ export default function ScanPage() {
                     scannedData={scannedData} 
                     imageForScanning={imageForScanning}
                     setCancelOrReported={setCancelOrReported}
+                    scanType={scanType}
                 />
 
             ) : (
@@ -77,17 +89,33 @@ export default function ScanPage() {
 
                     <Pressable
                         style={styles.flex_row_center}
-                        onPress={openCamera}
+                        onPress={openDiseasedCameraScan}
                     >
-                        <Image source={require('../../assets/images/open_camera_icon.png')} />
-                        <Text style={styles.text}>Start Camera</Text>
+                        <Image source={require('../../assets/images/diseased_scan_icon.png')} style={{width: 70, height: 70}}/>
+                        <Text style={styles.text}>Diseased Durian Scan</Text>
                     </Pressable>
 
                     <Pressable
                         style={styles.flex_row_center}
-                        onPress={() => openGallery(setImageForScanning, setScannedData, setCancelOrReported)}
+                        onPress={openHealthyCameraScan}
                     >
-                        <Image source={require('../../assets/images/open_gallery_icon.png')} />
+                        <Image source={require('../../assets/images/healthy_scan_icon.png')} style={{width: 50, height: 50}}/>
+                        <Text style={styles.text}>Healthy Durian Camera</Text>
+                    </Pressable>
+
+                    {/* <Pressable
+                        style={styles.flex_row_center}
+                        onPress={openCamera}
+                    >
+                        <Image source={require('../../assets/images/open_camera_icon.png')} />
+                        <Text style={styles.text}>Start Camera</Text>
+                    </Pressable> */}
+
+                    <Pressable
+                        style={styles.flex_row_center}
+                        onPress={() => openGallery(setImageForScanning, setScannedData, setCancelOrReported, setScanType)}
+                    >
+                        <Image source={require('../../assets/images/open_gallery_icon.png')}  style={{width: 50, height: 50}}/>
                         <Text style={styles.text}>Upload Gallery</Text>
                     </Pressable>
                 </View>

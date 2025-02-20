@@ -1,9 +1,9 @@
 
-export type MolluskScannedDetails = {
-    mollusk_name: string,
-    scientific_name: string
+export type DurianScannedDetails = {
+    durian_name: string,
     description: string,
     status: string
+    scan_percentage: string
 }
 
 
@@ -15,6 +15,7 @@ export type REPORT_DETAILS = {
     street: string
     durian_disease_type: string
     user_id: number
+    farmName: string
 }
 
 

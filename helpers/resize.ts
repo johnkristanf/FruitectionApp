@@ -16,6 +16,7 @@ export async function resizeImage(imgSrc: string, width: number, height: number,
 
     } catch (error) {
         console.error(error)
+        throw error;
     }
    
 }

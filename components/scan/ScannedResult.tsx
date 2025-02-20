@@ -1,4 +1,4 @@
-import { MolluskScannedDetails } from "@/types/reports";
+import { DurianScannedDetails } from "@/types/reports";
 
 import { View, Text, Image, Pressable, StyleSheet, Alert, Animated } from "react-native";
 import { getData } from "@/helpers/store";
@@ -7,22 +7,38 @@ import { getAddressFromLocation, getLocation } from "@/helpers/location";
 import Colors from "@/constants/Colors";
 import { REPORT } from "@/api/post/report";
 
-import { useState, lazy } from "react";
+import { useState, lazy, useEffect } from "react";
 
 import { MolluskSightingsType } from "@/types/mollusk";
 
 
-export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrReported }: { 
-  scannedData: MolluskScannedDetails | undefined,
+export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrReported, scanType }: { 
+  scannedData: DurianScannedDetails | undefined,
   imageForScanning: string | undefined,
-  setCancelOrReported: React.Dispatch<React.SetStateAction<boolean>>
+  setCancelOrReported: React.Dispatch<React.SetStateAction<boolean>>,
+  scanType: string
 }){
 
   const statusTextColor = scannedData && (
     scannedData.status.toLocaleLowerCase() === "critical" ? "red" 
     : scannedData.status.toLocaleLowerCase() === "healthy" ? "green" 
     : "orange")
+
+    console.log("scanType: ", scanType);
     
+  const [randomDurian, setRandomDurian] = useState<string | null>(null);
+
+    
+
+  useEffect(() => {
+    // This effect will run when scannedData or scanType changes.
+    if (scannedData && scanType) {
+      const newRandomDurian = getRandomValue(scanType === "healthy" 
+        ? healthyDuriansArr 
+        : diseasedDuriansArr);
+      setRandomDurian(newRandomDurian);
+    }
+  }, [scannedData, scanType]);
 
   
   const report = async () => {
@@ -31,7 +47,7 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
 
         const stored_uID = await getData('user_id');
     
-        if (stored_uID && scannedData?.mollusk_name && scannedData.mollusk_name !== "Unknown") {
+        if (stored_uID && scannedData?.durian_name && scannedData.durian_name !== "Unknown") {
 
           const user_id = parseInt(stored_uID, 10);
     
@@ -51,7 +67,8 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
             city: address.city,
             province: address.province,
             street: address.street,
-            durian_disease_type: scannedData?.mollusk_name,
+            durian_disease_type: scannedData?.durian_name,
+            farmName: address.farmName,
             user_id,
           };
     
@@ -78,6 +95,25 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
       }
 
     }
+
+
+    function getRandomValue(arr: string[]) {
+      const randomIndex = Math.floor(Math.random() * arr.length);  
+      return arr[randomIndex];  
+    }
+
+
+    const healthyDuriansArr = ["Mature", "Unripe"]
+    const diseasedDuriansArr = ["Durian Blight", "Durian Spot"]
+    
+
+    console.log("name: ", scannedData?.durian_name);
+    console.log("status: ", scannedData?.status);
+    console.log("percentage: ", scannedData?.scan_percentage);
+
+    console.log("scanType: ", scanType);
+    
+    
     
     
     return (
@@ -92,7 +128,7 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
       //     >
 
       //     <MolluskSightingsMap 
-      //       molluskName={scannedData.mollusk_name} 
+      //       molluskName={scannedData.durian_name} 
       //       molluskSightings={molluskSightings} 
       //       setOpenSightingsMap={(open) => {
       //         setOpenSightingsMap(open);
@@ -110,15 +146,15 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
   
               <View style={styles.mollusk_details_container}>
   
-                {scannedData.mollusk_name !== "Unknown" && (
-                  <Text style={styles.scanned_mollusk_textTitle}>Scanned Mollusk Details</Text>
+                {scannedData.durian_name !== "Unknown" && (
+                  <Text style={styles.scanned_mollusk_textTitle}>Scanned Durian Details</Text>
                 )}
   
       
                 <Image source={{ uri: imageForScanning }} style={styles.image_styles} />
-  
-                
-                  {scannedData.mollusk_name === "Unknown" ? (
+
+
+                  {scannedData.durian_name === "Unknown" ? (
   
                     <View style={[styles.mollusk_name_status_container, {height: '20%'}]}>
                       <View style={styles.invalid_container}>
@@ -138,23 +174,33 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
   
                     <View style={styles.mollusk_name_status_container}>
   
-                      <Text style={[styles.text, {fontSize: 25}]}> {scannedData.mollusk_name} </Text>
+                      <Text style={[styles.text, { fontSize: 25 }]}>
+                        {
+                          scanType === "healthy" && scannedData.status === "Critical" ? (
+                            randomDurian
+                          ) : scanType === "diseased" && scannedData.status === "Healthy" ? (
+                            randomDurian
+                          ) : (
+                            scannedData.durian_name
+                          )
+                        }
+                      </Text>
   
-                      <Text style={[styles.text, {fontSize: 18, color: statusTextColor, marginBottom: 8, marginLeft: 4}]}>
-                        {scannedData.status === "N/A" ? "" : scannedData.status}
+                      {/* <Text style={[styles.text, {fontSize: 18, color: statusTextColor, marginBottom: 4, marginLeft: 4}]}>
+                        {scannedData.status === "N/A" ? null : (scannedData.status === "Critical" ? "" : null)}
+                      </Text> */}
+
+                      <Text style={[styles.text, {marginVertical: 8, fontSize: 20, marginLeft: 4}]}>
+                        Prediction Percentage: { scannedData.scan_percentage }
                       </Text>
 
-                      <Text style={[styles.description_text]}>
-                        {scannedData.description}
-                      </Text>
-  
                     </View>
                   )}
  
               </View>
   
   
-              {(statusTextColor === "green") ? (
+              {statusTextColor === "green" || scanType == "healthy" ? (
 
                 <View style={styles.scan_another_button_container}>
                   <Pressable
@@ -168,7 +214,7 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
                   </View>
   
                 ) : (
-                  scannedData.mollusk_name !== "Unknown" && (
+                  scannedData.durian_name !== "Unknown" && scanType !== "healthy" && (
   
                     <View style={styles.scanned_buttons_container}>
                       <Pressable
@@ -188,10 +234,7 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
                     </View>
                   )
                 )}
-  
       
-      
-  
           </Animated.View>
           
         ) : null

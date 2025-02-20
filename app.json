@@ -4,7 +4,7 @@
     "slug": "ClamscannerApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/city_logo.jpg",
+    "icon": "./assets/images/city_logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/city_logo.jpg",
+        "foregroundImage": "./assets/images/city_logo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.johnkristanf.ClamscannerApp",
