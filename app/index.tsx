@@ -19,12 +19,12 @@ export default function LandingPage() {
             <View style={[styles.flex_col_center, { width: '100%', gap: 12 }]}> 
 
                 <View style={styles.signup_container}>
-                    <Link href="/signup" style={styles.get_started}>Sign Up</Link>
+                    <Link href="/login" style={styles.get_started}>Sign In</Link>
                 </View>
 
                 <Text style={styles.already_signup}>
-                    Already Have an Account?
-                    <Link href="/login" style={{textDecorationLine: 'underline'}}>Sign In</Link>
+                    Don't Have an account yet? 
+                    <Link href="/signup" style={{textDecorationLine: 'underline'}}>Sign Up</Link>
                 </Text>
 
                 

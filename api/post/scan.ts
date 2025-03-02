@@ -4,7 +4,7 @@ import { DurianScannedDetails } from "@/types/reports";
 
 export const Scan = async (capturedImageFormData: FormData, setCancelOrReported: React.Dispatch<React.SetStateAction<boolean>>) => {
 
-    console.log("setCancelOrReported:", setCancelOrReported)
+    console.log("setCancelOrReported 123:", setCancelOrReported)
 
     try {
         const response = await axios.post(`${DOMAIN_NAME_PY}/image/scan`, capturedImageFormData, {

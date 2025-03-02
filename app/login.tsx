@@ -81,11 +81,11 @@ export default function LoginPage() {
 
 
 const styles = StyleSheet.create({
-
   login_form_container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
   },
 
   flex_row: {
@@ -93,24 +93,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 15,
-    marginBottom: 15
+    marginBottom: 15,
   },
 
   text: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: '#ffff',
-
+    color: '#ffffff',
+    textAlign: 'center',
+    marginBottom: 10
   },
 
   form: {
     width: '100%',
-    height: '100%',
-    flex: 1,
+    maxWidth: 400,
     justifyContent: 'center',
-    alignItems: 'flex-start',
-    paddingLeft: 8,
-    marginTop: 30
+    alignItems: 'center', 
+    padding: 16, 
+    borderRadius: 10,
   },
 
   modalBackground: {
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   modalContainer: {
     width: 200,
     height: 150,
@@ -128,11 +129,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+
   modalText: {
     marginTop: 20,
     fontSize: 18,
     fontWeight: '500',
+    textAlign: 'center',
   },
-
-
 });

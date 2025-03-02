@@ -14,6 +14,9 @@ export default function ScanPage() {
     const [scannedData, setScannedData] = useState<DurianScannedDetails | undefined >();
     const [isOpenCamera, setIsOpenCamera] = useState<boolean>(false);
     const [imageForScanning, setImageForScanning] = useState<string>();
+    const [capturedImagesForHealthy, setCapturedImagesForHealthy] = useState<any[]>([]);
+
+    
 
     const [scanType, setScanType] = useState<string>("");
 
@@ -45,6 +48,9 @@ export default function ScanPage() {
 
     }, [cancelOrReported])
 
+    console.log("scannedData: ", scannedData);
+    
+
     return (
         <ImageBackground
             source={require('../../assets/images/city_bg.jpeg')}
@@ -67,6 +73,7 @@ export default function ScanPage() {
             {isOpenCamera ? (
                 <OpenCamera
                     setImageForScanning={setImageForScanning}
+                    setCapturedImagesForHealthy={setCapturedImagesForHealthy}
                     setIsOpenCamera={setIsOpenCamera}
                     setScannedData={setScannedData}
                     setCancelOrReported={setCancelOrReported}
@@ -74,7 +81,11 @@ export default function ScanPage() {
                 />
 
             ) : imageForScanning && !scannedData ? (
-                <Scanning imageForScanning={imageForScanning} />
+                <Scanning 
+                    imageForScanning={imageForScanning} 
+                    capturedImagesForHealthy={capturedImagesForHealthy}
+                    scanType={scanType}
+                />
 
             ) : imageForScanning && scannedData ? (
                 <ScannedImageResult 
@@ -82,6 +93,7 @@ export default function ScanPage() {
                     imageForScanning={imageForScanning}
                     setCancelOrReported={setCancelOrReported}
                     scanType={scanType}
+                    capturedImagesForHealthy={capturedImagesForHealthy}
                 />
 
             ) : (

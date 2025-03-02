@@ -12,11 +12,12 @@ import { useState, lazy, useEffect } from "react";
 import { MolluskSightingsType } from "@/types/mollusk";
 
 
-export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrReported, scanType }: { 
+export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrReported, scanType, capturedImagesForHealthy }: { 
   scannedData: DurianScannedDetails | undefined,
   imageForScanning: string | undefined,
   setCancelOrReported: React.Dispatch<React.SetStateAction<boolean>>,
-  scanType: string
+  scanType: string,
+  capturedImagesForHealthy: any[]
 }){
 
   const statusTextColor = scannedData && (
@@ -28,17 +29,7 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
     
   const [randomDurian, setRandomDurian] = useState<string | null>(null);
 
-    
-
-  useEffect(() => {
-    // This effect will run when scannedData or scanType changes.
-    if (scannedData && scanType) {
-      const newRandomDurian = getRandomValue(scanType === "healthy" 
-        ? healthyDuriansArr 
-        : diseasedDuriansArr);
-      setRandomDurian(newRandomDurian);
-    }
-  }, [scannedData, scanType]);
+ 
 
   
   const report = async () => {
@@ -105,7 +96,18 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
 
     const healthyDuriansArr = ["Mature", "Unripe"]
     const diseasedDuriansArr = ["Durian Blight", "Durian Spot"]
-    
+
+
+    useEffect(() => {
+      // This effect will run when scannedData or scanType changes.
+      if (scannedData && scanType) {
+        const newRandomDurian = getRandomValue(scanType === "healthy" 
+          ? healthyDuriansArr 
+          : diseasedDuriansArr);
+        setRandomDurian(newRandomDurian);
+      }
+    }, [scannedData, scanType]);
+      
 
     console.log("name: ", scannedData?.durian_name);
     console.log("status: ", scannedData?.status);
@@ -151,7 +153,19 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
                 )}
   
       
-                <Image source={{ uri: imageForScanning }} style={styles.image_styles} />
+                {scanType === 'healthy' ? (
+
+                  <View style={styles.imagesContainer}>
+                    {capturedImagesForHealthy.map((img, index) => (
+                      <Image key={index} source={{ uri: img.uri }} style={styles.capturedImage} />
+                    ))}
+                  </View>
+
+                  ) : (
+                  <Image source={{ uri: imageForScanning }} style={styles.image_styles} />
+                )}
+                  
+
 
 
                   {scannedData.durian_name === "Unknown" ? (
@@ -190,7 +204,7 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
                         {scannedData.status === "N/A" ? null : (scannedData.status === "Critical" ? "" : null)}
                       </Text> */}
 
-                      <Text style={[styles.text, {marginVertical: 8, fontSize: 20, marginLeft: 4}]}>
+                      <Text style={[styles.text, {marginVertical: 8, fontSize: 20, marginLeft: 4, paddingBottom: 5}]}>
                         Prediction Percentage: { scannedData.scan_percentage }
                       </Text>
 
@@ -244,6 +258,27 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
 }
 
 const styles = StyleSheet.create({
+
+  imagesContainer: {
+    flex: 1,
+    flexDirection: 'row',  
+    justifyContent: 'center',  
+    alignItems: 'center',  
+    width: '100%', 
+    flexWrap: 'wrap', 
+    gap: 10, 
+    marginTop: 20
+},
+
+capturedImage: {
+    width: 120,  
+    height: 190,  
+    margin: 10,  
+    borderRadius: 10, 
+    resizeMode: 'cover', 
+},
+
+
   scan_container: {
     width: "100%",
     height: "100%",

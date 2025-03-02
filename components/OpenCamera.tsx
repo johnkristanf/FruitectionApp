@@ -10,12 +10,14 @@ import Colors from '@/constants/Colors';
 
 export function OpenCamera({
     setImageForScanning,
+    setCapturedImagesForHealthy,
     setIsOpenCamera,
     setScannedData,
     setCancelOrReported,
     scanType
 }: {
     setImageForScanning: React.Dispatch<React.SetStateAction<string | undefined>>,
+    setCapturedImagesForHealthy: React.Dispatch<React.SetStateAction<any[]>>
     setIsOpenCamera: React.Dispatch<React.SetStateAction<boolean>>,
     setScannedData: React.Dispatch<React.SetStateAction<DurianScannedDetails | undefined>>,
     setCancelOrReported: React.Dispatch<React.SetStateAction<boolean>>,
@@ -41,6 +43,7 @@ export function OpenCamera({
             const resizedImageUri = await resizeImage(uri, 512, 512, 0.8);
 
             setImageForScanning(uri);
+            setCapturedImagesForHealthy(capturedImages);
             setIsOpenCamera(false);
 
             if (resizedImageUri) {
@@ -57,7 +60,7 @@ export function OpenCamera({
         try {
             const scanRespData = await Scan(formData, setCancelOrReported);
 
-            console.log("scanRespData: ", scanRespData);
+            console.log("scanRespData healthy: ", scanRespData);
             
 
             if (scanRespData) {
@@ -80,6 +83,8 @@ export function OpenCamera({
     };
 
     console.log("cap len:", capturedImages.length);
+    console.log("capturedImages: ", capturedImages);
+    
     
 
     const startScanningDiseased = async () => {
@@ -107,7 +112,8 @@ export function OpenCamera({
                         } as any);
 
                         const scanRespData = await Scan(formData, setCancelOrReported);
-
+                        console.log("scanRespData diseased: ", scanRespData);
+                        
                         if (scanRespData) {
                             FetchDurianDetails(scanRespData.durian_disease_result)
                                 .then(durianDetails => {

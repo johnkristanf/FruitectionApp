@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Fruitection",
-    "slug": "ClamscannerApp",
+    "slug": "fruitection-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/city_logo.png",
@@ -20,18 +20,12 @@
         "foregroundImage": "./assets/images/city_logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.johnkristanf.ClamscannerApp",
+      "package": "com.johnkristanf.fruitection",
       "permissions": [
         "INTERNET",
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
-      ],
-
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyDlgGqUgdx7y6XqEybrvh0O21KtsRbV2HU"
-        }
-      }
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -50,8 +44,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "3786d311-c48a-40fe-841f-13fbe19db1dd"
+        "projectId": "5582a7b8-45d1-4b90-b0e5-ce46307e1fee"
       }
-    }
+    },
+    "owner": "johnkristanf"
   }
 }

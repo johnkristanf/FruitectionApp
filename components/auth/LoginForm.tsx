@@ -102,12 +102,13 @@ const styles = StyleSheet.create({
     auth_container: {
         width: '100%',
         height: '30%', 
-        alignItems: 'flex-start',
+        alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
     },
     inputs: {
-        width: '75%',
+        width: '100%',
+        marginTop: 5
     },
     inputContainer: {
         width: '100%',
@@ -127,14 +128,14 @@ const styles = StyleSheet.create({
         borderRadius: Colors.theme.radius,
         color: Colors.theme.whiteText,
         padding: 9,
-        width: '70%',
+        width: '100%',
         alignItems: 'center',
         marginTop: 20
     },
     text: {
         color: Colors.theme.whiteText,
         fontWeight: "bold",
-        textAlign: 'center'
+        textAlign: 'center',
     },
     title: {
         color: Colors.theme.whiteText,

@@ -152,14 +152,14 @@ export default function SignupForm({setIsSignup, setIsLoading}: {
 const styles = StyleSheet.create({
     auth_container: {
         width: '100%',
-        height: '40%', 
+        height: '20%', 
         alignItems: 'flex-end',
         justifyContent: 'center',
-        padding: 20,
+        padding: 30,
 
     },
     inputs: {
-        width: '75%',
+        width: '100%',
     },
 
     inputContainer: {
@@ -178,9 +178,9 @@ const styles = StyleSheet.create({
 
     signup_btn_container: {
         width: '100%',
-        height: '48%',
+        height: '5%',
         justifyContent: 'center',
-        alignItems: 'flex-end',
+        alignItems: 'flex-start',
     },
 
     signup_btn: {
@@ -188,9 +188,10 @@ const styles = StyleSheet.create({
         borderRadius: Colors.theme.radius,
         color: Colors.theme.whiteText,
         padding: 9,
-        width: '70%',
+        width: '100%',
+        height: 40,
         alignItems: 'center',
-        marginTop: 100
+        marginTop: 50
     },
     text: {
         color: Colors.theme.whiteText,

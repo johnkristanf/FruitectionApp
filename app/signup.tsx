@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'flex-end',
         gap: 50,
-        marginTop: 120,
+        marginTop: 60,
     },
     login_link: {
         marginTop: 20,
