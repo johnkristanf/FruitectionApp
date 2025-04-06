@@ -39,6 +39,8 @@ export const openGallery = async (
             if (!fileInfo.exists) throw new Error('File does not exist');
 
             const formData = new FormData();
+
+            formData.append("diseaseType", "upload")
             formData.append('captured_image_file', {
                 uri:  resizedImageUri,
                 name: fileInfo.uri.split('/').pop(),

@@ -14,14 +14,16 @@ export function OpenCamera({
     setIsOpenCamera,
     setScannedData,
     setCancelOrReported,
-    scanType
+    scanType,
+    diseaseType
 }: {
     setImageForScanning: React.Dispatch<React.SetStateAction<string | undefined>>,
     setCapturedImagesForHealthy: React.Dispatch<React.SetStateAction<any[]>>
     setIsOpenCamera: React.Dispatch<React.SetStateAction<boolean>>,
     setScannedData: React.Dispatch<React.SetStateAction<DurianScannedDetails | undefined>>,
     setCancelOrReported: React.Dispatch<React.SetStateAction<boolean>>,
-    scanType: string
+    scanType: string,
+    diseaseType: string
 }) {
     const cameraRef = useRef<CameraView>(null);
     const [camFacing, setCamFacing] = useState<string>('back');
@@ -49,6 +51,8 @@ export function OpenCamera({
             if (resizedImageUri) {
                 const fileInfo = await getInfoAsync(resizedImageUri);
                 if (!fileInfo.exists) throw new Error('File does not exist');
+
+                formData.append("diseaseType", diseaseType)
                 formData.append(`captured_image_file`, {
                     uri: resizedImageUri,
                     name: name,
@@ -56,10 +60,10 @@ export function OpenCamera({
                 } as any);
             }
 
-        // Proceed with scanning using the formData
-        try {
-            const scanRespData = await Scan(formData, setCancelOrReported);
 
+        try {
+
+            const scanRespData = await Scan(formData, setCancelOrReported);
             console.log("scanRespData healthy: ", scanRespData);
             
 
@@ -105,6 +109,8 @@ export function OpenCamera({
                         if (!fileInfo.exists) throw new Error('File does not exist');
 
                         const formData = new FormData();
+
+                        formData.append("diseaseType", diseaseType)
                         formData.append('captured_image_file', {
                             uri: resizedImageUri,
                             name: fileInfo.uri.split('/').pop(),
@@ -117,6 +123,8 @@ export function OpenCamera({
                         if (scanRespData) {
                             FetchDurianDetails(scanRespData.durian_disease_result)
                                 .then(durianDetails => {
+                                    console.log("durianDetails sud sa camera: ", durianDetails);
+                                    
                                     if(durianDetails){
                                         durianDetails.scan_percentage = scanRespData.predicted_disease_percentage
                                         setScannedData(durianDetails)

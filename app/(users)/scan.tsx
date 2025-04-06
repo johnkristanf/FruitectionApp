@@ -19,15 +19,24 @@ export default function ScanPage() {
     
 
     const [scanType, setScanType] = useState<string>("");
+    const [diseaseType, setDiseaseType] = useState<string>("");
 
     const [cancelOrReported, setCancelOrReported] = useState<boolean>(false);
 
     const [_, requestPermission] = useCameraPermissions();
 
    
-    const openDiseasedCameraScan = () => {
+    const openDiseasedLeafCameraScan = () => {
         requestPermission();
         setScanType("diseased");
+        setDiseaseType("leaf")
+        setIsOpenCamera(true);
+    };
+
+    const openDiseasedFruitCameraScan = () => {
+        requestPermission();
+        setScanType("diseased");
+        setDiseaseType("fruit")
         setIsOpenCamera(true);
     };
 
@@ -35,6 +44,7 @@ export default function ScanPage() {
     const openHealthyCameraScan = () => {
         requestPermission();
         setScanType("healthy");
+        setDiseaseType("healthy")
         setIsOpenCamera(true);
     };
 
@@ -48,6 +58,7 @@ export default function ScanPage() {
 
     }, [cancelOrReported])
 
+    console.log("imageForScanning: ", imageForScanning);
     console.log("scannedData: ", scannedData);
     
 
@@ -78,6 +89,7 @@ export default function ScanPage() {
                     setScannedData={setScannedData}
                     setCancelOrReported={setCancelOrReported}
                     scanType={scanType}
+                    diseaseType={diseaseType}
                 />
 
             ) : imageForScanning && !scannedData ? (
@@ -98,37 +110,32 @@ export default function ScanPage() {
 
             ) : (
                 <View style={styles.capture_methods_container}>
-
-                    <Pressable
-                        style={styles.flex_row_center}
-                        onPress={openDiseasedCameraScan}
-                    >
-                        <Image source={require('../../assets/images/diseased_scan_icon.png')} style={{width: 70, height: 70}}/>
-                        <Text style={styles.text}>Diseased Durian Scan</Text>
+                    <Pressable style={styles.pressableContainer} onPress={openDiseasedLeafCameraScan}>
+                        <View style={styles.flex_row_center}>
+                            <Image source={require('../../assets/images/diseased_leaf_scan.png')} style={{ width: 30, height: 60 }} />
+                            <Text style={styles.text}>Diseased Durian Leaf Scan</Text>
+                        </View>
                     </Pressable>
 
-                    <Pressable
-                        style={styles.flex_row_center}
-                        onPress={openHealthyCameraScan}
-                    >
-                        <Image source={require('../../assets/images/healthy_scan_icon.png')} style={{width: 50, height: 50}}/>
-                        <Text style={styles.text}>Healthy Durian Camera</Text>
+                    <Pressable style={styles.pressableContainer} onPress={openDiseasedFruitCameraScan}>
+                        <View style={styles.flex_row_center}>
+                            <Image source={require('../../assets/images/diseased_scan_icon.png')} style={{ width: 50, height: 70 }} />
+                            <Text style={styles.text}>Diseased Durian Fruit Scan</Text>
+                        </View>
                     </Pressable>
 
-                    {/* <Pressable
-                        style={styles.flex_row_center}
-                        onPress={openCamera}
-                    >
-                        <Image source={require('../../assets/images/open_camera_icon.png')} />
-                        <Text style={styles.text}>Start Camera</Text>
-                    </Pressable> */}
+                    <Pressable style={styles.pressableContainer} onPress={openHealthyCameraScan}>
+                        <View style={styles.flex_row_center}>
+                            <Image source={require('../../assets/images/healthy_scan_icon.png')} style={{ width: 50, height: 50 }} />
+                            <Text style={styles.text}>Healthy Durian Camera</Text>
+                        </View>
+                    </Pressable>
 
-                    <Pressable
-                        style={styles.flex_row_center}
-                        onPress={() => openGallery(setImageForScanning, setScannedData, setCancelOrReported, setScanType)}
-                    >
-                        <Image source={require('../../assets/images/open_gallery_icon.png')}  style={{width: 50, height: 50}}/>
-                        <Text style={styles.text}>Upload Gallery</Text>
+                    <Pressable style={styles.pressableContainer} onPress={() => openGallery(setImageForScanning, setScannedData, setCancelOrReported, setScanType)}>
+                        <View style={styles.flex_row_center}>
+                            <Image source={require('../../assets/images/open_gallery_icon.png')} style={{ width: 50, height: 50 }} />
+                            <Text style={styles.text}>Upload Gallery</Text>
+                        </View>
                     </Pressable>
                 </View>
             )}
@@ -163,16 +170,26 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 5,
+        padding: 5,
+        borderRadius: 10
     },
 
     capture_methods_container: {
-        width: '80%',
+        width: '100%',
         flex: 1,
-        alignItems: 'flex-start',
+        alignItems: 'center',
         justifyContent: 'center',
         paddingLeft: 15,
         paddingTop: 100,
         gap: 30,
+    },
+    pressableContainer: {
+        width: '80%', // Adjust the width as needed
+        borderWidth: 1,
+        borderColor: '#9CA3AF',
+        padding: 5,
+        borderRadius: 10,
+        alignItems: 'center', // Center the content horizontally
     },
 
     

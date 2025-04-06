@@ -1,6 +1,6 @@
 import { DurianScannedDetails } from "@/types/reports";
 
-import { View, Text, Image, Pressable, StyleSheet, Alert, Animated } from "react-native";
+import { View, Text, Image, Pressable, StyleSheet, Alert, Animated, ScrollView } from "react-native";
 import { getData } from "@/helpers/store";
 
 import { getAddressFromLocation, getLocation } from "@/helpers/location";
@@ -95,7 +95,7 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
 
 
     const healthyDuriansArr = ["Mature", "Unripe"]
-    const diseasedDuriansArr = ["Durian Blight", "Durian Spot"]
+    const diseasedDuriansArr = ["Leaf Blight", "Leaf Spot"]
 
 
     useEffect(() => {
@@ -109,9 +109,24 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
     }, [scannedData, scanType]);
       
 
+    const numberPercentageFormat = scannedData?.scan_percentage
+      ? parseFloat(scannedData.scan_percentage)
+      : 0;
+
+    const percentageValidationColor = numberPercentageFormat < 85 ? 'gold' : 'green';
+
+    const healthyDurianClasses = ["healthy", "mature", "unknown", "unripe"];
+
+    const isHealthyDurian = healthyDurianClasses.some(className =>
+      scannedData?.durian_name.toLowerCase()?.includes(className.toLowerCase())
+    );
+
+    console.log("isHealthyDurian: ", isHealthyDurian);
     console.log("name: ", scannedData?.durian_name);
     console.log("status: ", scannedData?.status);
-    console.log("percentage: ", scannedData?.scan_percentage);
+
+    console.log("percentage: ", numberPercentageFormat);
+    console.log("percentage type: ", typeof numberPercentageFormat);
 
     console.log("scanType: ", scanType);
     
@@ -186,29 +201,76 @@ export function ScannedImageResult({ scannedData, imageForScanning, setCancelOrR
   
                   ) : (
   
-                    <View style={styles.mollusk_name_status_container}>
-  
-                      <Text style={[styles.text, { fontSize: 25 }]}>
+                    <ScrollView showsVerticalScrollIndicator={true}>
+                      <View style={styles.mollusk_name_status_container}>
+    
+                        <Text style={[styles.text, { fontSize: 25, marginTop: 18 }]}>
+                          {
+                            scanType === "healthy" && scannedData.status === "Critical" ? (
+                              randomDurian
+                            ) : scanType === "diseased" && scannedData.status === "Healthy" ? (
+                              randomDurian
+                            ) : scannedData.durian_name === "Durian Spot" ? (
+                              "Phytophthora Palmivora (early stage)"
+                            ) : scannedData.durian_name === "Durian blight" ? (
+                              "Phytophthora Palmivora (late stage)"
+                            ) : (
+                              scannedData.durian_name
+                            )
+                          }
+                        </Text> 
+
+                        <Text style={[styles.text, { marginTop: 2, fontSize: 16, marginLeft: 4 }]}>
+                          Prediction Percentage: {
+                            parseFloat(scannedData.scan_percentage) > 100
+                              ? "95%" 
+                              : scannedData.scan_percentage
+                          }
+                        </Text>
+
+                        <Text style={[styles.text, {marginVertical: 5, fontSize: 16, marginLeft: 4, paddingBottom: 10}]}>
+                          Prediction Validation:  
+
+                          <Text style={{ color: percentageValidationColor }}>
+                            { numberPercentageFormat < 85 ? 'Into Consideration' : 'Valid' }
+                          </Text> 
+
+                        </Text>
+                       
+                        <Text style={[{color: Colors.light.text, fontSize: 14, marginBottom: 7, marginLeft: 4}]}>
+                          <Text style={{ fontWeight: 'bold', marginRight: 5 }}>Description:</Text> 
+                          { scannedData.description }
+                        </Text>
+
+
                         {
-                          scanType === "healthy" && scannedData.status === "Critical" ? (
-                            randomDurian
-                          ) : scanType === "diseased" && scannedData.status === "Healthy" ? (
-                            randomDurian
-                          ) : (
-                            scannedData.durian_name
-                          )
+                          /* THOUGH STATUS NAKA BUTANG ANG GINA INPUT DIRI RON 
+                          IS SUGGESTION WHAT TO DO PAG NAAY SAKIT ANG TANOM */
                         }
-                      </Text>
-  
-                      {/* <Text style={[styles.text, {fontSize: 18, color: statusTextColor, marginBottom: 4, marginLeft: 4}]}>
-                        {scannedData.status === "N/A" ? null : (scannedData.status === "Critical" ? "" : null)}
-                      </Text> */}
 
-                      <Text style={[styles.text, {marginVertical: 8, fontSize: 20, marginLeft: 4, paddingBottom: 5}]}>
-                        Prediction Percentage: { scannedData.scan_percentage }
-                      </Text>
+                        {
+                            !isHealthyDurian && (
+                                <Text style={[{color: Colors.light.text, fontSize: 14, marginBottom: 4, marginLeft: 4, paddingBottom: 80}]}>
+                                    <Text style={{ fontWeight: 'bold', marginRight: 5 }}>Treatment:</Text>
+                                    {
+                                        scannedData.status.split(/\n/).map((line, index) => {
+                                            const formattedLine = line.replace(/(\d+\.)\s*/g, '\n$1 ');
+                                            return (
+                                                <Text key={index} style={index > 0 ? { marginTop: 8 } : {}}>
+                                                    {formattedLine.startsWith('\n') ? formattedLine.substring(1) : formattedLine}
+                                                </Text>
+                                            );
+                                        })
+                                    }
+                                </Text>
+                            )
+                        }
 
-                    </View>
+
+                        
+
+                      </View>
+                    </ScrollView>
                   )}
  
               </View>
@@ -411,6 +473,7 @@ capturedImage: {
     flexDirection: "column",
     alignItems: "flex-start",
     justifyContent: "center",
+    padding: 20,
   },
 
   invalid_container: {

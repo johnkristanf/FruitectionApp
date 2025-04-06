@@ -8,18 +8,12 @@ interface Address {
 }
 
 
-// WALA PAY CAGANGOHAN FARM
 const farmLocations = {
-    cagangohanFarm: { latitude: 7.2950, longitude: 125.6700 }, 
+    maduaoFarm: { latitude: 7.287438, longitude: 125.644876 }, 
     jpLaurelFarm: { latitude: 7.276094, longitude: 125.677476 }, 
 };
 
 
-// const farmLocations = {
-//     cagangohanFarm: { latitude: 7.2950, longitude: 125.6700 }, 
-//     jpLaurelFarm: { latitude: 7.2847055, longitude: 125.6770541 }, 
-// }
-  
 export const getLocation = async (): Promise<{ latitude: number; longitude: number } | null> => {
 
     let { status } = await requestForegroundPermissionsAsync();
@@ -93,14 +87,14 @@ const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
 
 
 const getFarmIndicator = async (latitude: number, longitude: number) => {
-    const distanceToCagangohan = haversineDistance(latitude, longitude, farmLocations.cagangohanFarm.latitude, farmLocations.cagangohanFarm.longitude);
+    const distancetoMaduaoFarm = haversineDistance(latitude, longitude, farmLocations.maduaoFarm.latitude, farmLocations.maduaoFarm.longitude);
     const distanceToJPLaurel = haversineDistance(latitude, longitude, farmLocations.jpLaurelFarm.latitude, farmLocations.jpLaurelFarm.longitude);
 
     const threshold = 0.5; // Threshold in kilometers
 
     let farmName = '';
-    if (distanceToCagangohan < threshold) {
-        farmName = 'Cagangohan Farm';
+    if (distancetoMaduaoFarm < threshold) {
+        farmName = 'Maduao Farm';
     } else if (distanceToJPLaurel < threshold) {
         farmName = 'J.P.Laurel Farm';
     } else {
